@@ -1,9 +1,15 @@
 package com.mjc.school.controller.impl;
 
-import com.mjc.school.controller.NewsController;
+import com.mjc.school.controller.BaseController;
+import com.mjc.school.service.AuthorService;
+import com.mjc.school.service.CommentService;
 import com.mjc.school.service.NewsService;
+import com.mjc.school.service.TagService;
 import com.mjc.school.service.dto.NewsDtoRequest;
 import com.mjc.school.service.dto.NewsDtoResponse;
+import com.mjc.school.service.dto.TagDtoResponse;
+import com.mjc.school.service.dto.AuthorDtoResponse;
+import com.mjc.school.service.dto.CommentDtoResponse;
 import com.mjc.school.service.query.NewsQueryParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,12 +19,18 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "api/v1/news",
         produces = {"application/JSON", "application/XML"})
-public class NewsRestController implements NewsController {
+public class NewsRestController implements BaseController<NewsDtoRequest, NewsDtoResponse, Long> {
     private final NewsService newsService;
+    private final AuthorService authorService;
+    private final TagService tagService;
+    private final CommentService commentService;
 
     @Autowired
-    public NewsRestController(NewsService newsService) {
+    public NewsRestController(NewsService newsService, AuthorService authorService, TagService tagService, CommentService commentService) {
         this.newsService = newsService;
+        this.authorService = authorService;
+        this.tagService = tagService;
+        this.commentService = commentService;
     }
 
     @Override
@@ -65,8 +77,8 @@ public class NewsRestController implements NewsController {
         newsService.deleteById(id);
     }
 
-    @Override
-    @GetMapping("/param")
+
+    @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public List<NewsDtoResponse> readBySearchParams(@RequestParam(value = "tag-id", required = false) List<Integer> tagIds,
                                                     @RequestParam(value = "tag-names", required = false) List<String> tagNames,
@@ -74,5 +86,25 @@ public class NewsRestController implements NewsController {
                                                     @RequestParam(value = "title", required = false) String title,
                                                     @RequestParam(value = "content", required = false) String content) {
         return newsService.readBySearchParams(new NewsQueryParams(tagNames,tagIds,author,title,content));
+    }
+
+
+    @GetMapping("/news/{newsId}/author")
+    @ResponseStatus(HttpStatus.OK)
+    public AuthorDtoResponse readAuthorByNewsId(@PathVariable Long newsId) {
+        return authorService.readByNewsId(newsId);
+    }
+
+
+    @GetMapping("/news/{newsId}/tags")
+    @ResponseStatus(HttpStatus.OK)
+    public List<TagDtoResponse> readTagsByNewsId(@PathVariable Long newsId) {
+        return tagService.readByNewsId(newsId);
+    }
+
+    @GetMapping("/news/{newsId}/comments")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CommentDtoResponse> readCommentsByNewsId(@PathVariable Long newsId) {
+        return commentService.readByNewsId(newsId);
     }
 }

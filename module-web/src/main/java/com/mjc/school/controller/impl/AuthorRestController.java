@@ -1,6 +1,6 @@
 package com.mjc.school.controller.impl;
 
-import com.mjc.school.controller.AuthorController;
+import com.mjc.school.controller.BaseController;
 import com.mjc.school.service.AuthorService;
 import com.mjc.school.service.dto.AuthorDtoRequest;
 import com.mjc.school.service.dto.AuthorDtoResponse;
@@ -13,21 +13,13 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "api/v1/authors",
         produces = {"application/JSON", "application/XML"})
-public class AuthorRestController implements AuthorController {
+public class AuthorRestController implements BaseController<AuthorDtoRequest, AuthorDtoResponse, Long> {
 
     private final AuthorService authorService;
 
     @Autowired
     public AuthorRestController(AuthorService authorService) {
         this.authorService = authorService;
-    }
-
-
-    @Override
-    @GetMapping("/news/{newsId}")
-    @ResponseStatus(HttpStatus.OK)
-    public AuthorDtoResponse readByIdNews(@PathVariable Long newsId) {
-        return authorService.readByNewsId(newsId);
     }
 
     @Override

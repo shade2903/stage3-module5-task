@@ -1,6 +1,6 @@
 package com.mjc.school.controller.impl;
 
-import com.mjc.school.controller.TagController;
+import com.mjc.school.controller.BaseController;
 import com.mjc.school.service.TagService;
 import com.mjc.school.service.dto.TagDtoRequest;
 import com.mjc.school.service.dto.TagDtoResponse;
@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "api/v1/tags",
         produces = {"application/JSON", "application/XML"})
-public class TagRestController implements TagController {
+public class TagRestController implements BaseController<TagDtoRequest, TagDtoResponse, Long> {
     private final TagService tagService;
 
     public TagRestController(TagService tagService) {
@@ -63,10 +63,5 @@ public class TagRestController implements TagController {
         tagService.deleteById(id);
     }
 
-    @Override
-    @GetMapping("/news/{newsId}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<TagDtoResponse> readByNewsId(@PathVariable Long newsId) {
-        return tagService.readByNewsId(newsId);
-    }
+
 }

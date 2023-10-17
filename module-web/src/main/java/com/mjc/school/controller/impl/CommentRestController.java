@@ -1,6 +1,6 @@
 package com.mjc.school.controller.impl;
 
-import com.mjc.school.controller.CommentController;
+import com.mjc.school.controller.BaseController;
 import com.mjc.school.service.CommentService;
 import com.mjc.school.service.dto.CommentDtoRequest;
 import com.mjc.school.service.dto.CommentDtoResponse;
@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "api/v1/comments",
         produces = {"application/JSON", "application/XML"})
-public class CommentRestController implements CommentController {
+public class CommentRestController implements BaseController<CommentDtoRequest, CommentDtoResponse, Long> {
     private final CommentService commentService;
 
     public CommentRestController(CommentService commentService) {
@@ -63,10 +63,4 @@ public class CommentRestController implements CommentController {
         commentService.deleteById(id);
     }
 
-    @Override
-    @GetMapping("/news/{newsId}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<CommentDtoResponse> readByNewsId(@PathVariable Long newsId) {
-        return commentService.readByNewsId(newsId);
-    }
 }
