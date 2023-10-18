@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "api/v1/authors",
         produces = {"application/JSON", "application/XML"})
-@Api(produces = "application/json", value = "Operations for creating, updating, retrieving and deleting news in the application")
+@Api(value = "Operations for creating, updating, retrieving and deleting authors in the application")
 public class AuthorRestController implements BaseController<AuthorDtoRequest, AuthorDtoResponse, Long> {
 
     private final AuthorService authorService;
@@ -54,9 +54,10 @@ public class AuthorRestController implements BaseController<AuthorDtoRequest, Au
 
     @Override
     @PostMapping
-    @ApiOperation(value = "Create a piece of news", response = AuthorDtoResponse.class)
+    @ApiOperation(value = "Create an author", response = AuthorDtoResponse.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successfully created a piece of author"),
+            @ApiResponse(code = 201, message = "Successfully created an author"),
+            @ApiResponse(code = 400, message = "Your request is not valid"),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),

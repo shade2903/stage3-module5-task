@@ -6,8 +6,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Objects;
 
-@Component
-@Scope("prototype")
+
 public class NewsDtoRequest {
     private Long id;
     private String title;

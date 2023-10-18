@@ -12,7 +12,7 @@ public class CommentDtoResponse {
 
     private LocalDateTime lastUpdatedDate;
 
-    private NewsDtoResponse newsDto;
+    private Long newsId;
 
     public CommentDtoResponse() {
     }
@@ -21,12 +21,12 @@ public class CommentDtoResponse {
                               String name,
                               LocalDateTime createDate,
                               LocalDateTime lastUpdateDate,
-                              NewsDtoResponse newsDto) {
+                              Long newsId) {
         this.id = id;
         this.name = name;
         this.createdDate = createDate;
         this.lastUpdatedDate = lastUpdateDate;
-        this.newsDto = newsDto;
+        this.newsId = newsId;
     }
 
     public Long getId() {
@@ -61,28 +61,24 @@ public class CommentDtoResponse {
         this.lastUpdatedDate = lastUpdatedDate;
     }
 
-    public NewsDtoResponse getNewsDto() {
-        return newsDto;
+    public Long getNewsId() {
+        return newsId;
     }
 
-    public void setNewsDto(NewsDtoResponse newsDto) {
-        this.newsDto = newsDto;
+    public void setNewsId(Long newsId) {
+        this.newsId = newsId;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof CommentDtoResponse that)) return false;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(createdDate, that.createdDate) &&
-                Objects.equals(lastUpdatedDate, that.lastUpdatedDate) &&
-                Objects.equals(newsDto, that.newsDto);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(createdDate, that.createdDate) && Objects.equals(lastUpdatedDate, that.lastUpdatedDate) && Objects.equals(newsId, that.newsId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, createdDate, lastUpdatedDate, newsDto);
+        return Objects.hash(id, name, createdDate, lastUpdatedDate, newsId);
     }
 
     @Override
@@ -92,7 +88,7 @@ public class CommentDtoResponse {
                 ", name='" + name + '\'' +
                 ", createDate=" + createdDate +
                 ", lastUpdateDate=" + lastUpdatedDate +
-                ", newsDto=" + newsDto +
+                ", newsId=" + newsId +
                 '}';
     }
 }

@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
-@Component
+
 public class NewsDtoResponse {
     private Long id;
     private String title;

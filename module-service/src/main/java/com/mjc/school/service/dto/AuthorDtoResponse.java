@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-@Component
+
 public class AuthorDtoResponse {
     private Long id;
     private String name;

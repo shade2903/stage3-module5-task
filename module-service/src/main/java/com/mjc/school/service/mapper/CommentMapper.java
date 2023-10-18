@@ -23,6 +23,6 @@ public abstract class CommentMapper {
             "java(newsRepository.getReference(request.getNewsId()))")
     public abstract CommentModel commentFromDtoRequest(CommentDtoRequest request);
 
-    @Mapping(source = "news", target = "newsDto")
+    @Mapping(target = "newsId", expression = "java(model.getNews().getId())")
     public abstract CommentDtoResponse commentToDtoResponse(CommentModel model);
 }

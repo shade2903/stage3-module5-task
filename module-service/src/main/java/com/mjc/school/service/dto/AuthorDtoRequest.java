@@ -5,8 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
-@Component
-@Scope("prototype")
+
 public class AuthorDtoRequest {
     private Long id;
     private String name;
