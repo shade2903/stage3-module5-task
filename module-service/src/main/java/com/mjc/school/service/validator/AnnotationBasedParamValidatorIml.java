@@ -31,6 +31,5 @@ public class AnnotationBasedParamValidatorIml implements ParamValidator {
                     .map(validationFunction::get)
                     .forEach(fieldValidator -> fieldValidator.validate(param, field));
         }
-
     }
 }

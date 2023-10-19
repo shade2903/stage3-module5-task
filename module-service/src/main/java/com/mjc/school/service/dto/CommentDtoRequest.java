@@ -1,9 +1,15 @@
 package com.mjc.school.service.dto;
 
+import com.mjc.school.service.validator.annotation.NotEmpty;
+import com.mjc.school.service.validator.annotation.RegExp;
+
 import java.util.Objects;
 
 public class CommentDtoRequest {
     private Long id;
+
+//    @NotEmpty
+    @RegExp(value = "^[а-яА-ЯёЁ .'-]+$")
     private String name;
 
     private Long newsId;
