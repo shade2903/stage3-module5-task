@@ -1,6 +1,5 @@
 package com.mjc.school.controller.handler;
 
-import com.mjc.school.service.dto.ErrorDto;
 import com.mjc.school.service.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

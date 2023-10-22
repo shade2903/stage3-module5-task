@@ -4,7 +4,6 @@ import com.mjc.school.controller.BaseController;
 import com.mjc.school.service.CommentService;
 import com.mjc.school.service.dto.CommentDtoRequest;
 import com.mjc.school.service.dto.CommentDtoResponse;
-import com.mjc.school.service.validator.annotation.ValidParams;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +38,6 @@ public class CommentRestController implements BaseController<CommentDtoRequest, 
     @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @ValidParams
     public CommentDtoResponse create(@RequestBody CommentDtoRequest createRequest) {
         return commentService.create(createRequest);
     }
