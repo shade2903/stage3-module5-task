@@ -1,11 +1,14 @@
 package com.mjc.school.service.aspect;
 
+import com.mjc.school.service.exception.ErrorCode;
+import com.mjc.school.service.exception.ValidatorException;
 import com.mjc.school.service.validator.ConstraintViolation;
 import com.mjc.school.service.validator.Valid;
 import com.mjc.school.service.validator.Validator;
 import com.mjc.school.service.validator.checker.ConstraintChecker;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +27,7 @@ public class ValidationAspect {
         this.validator = validator;
     }
 
+    @Before("execution(public * *(.., @com.mjc.school.service.validator.Valid (*), ..))")
     public void validateBeforeInvocation(final JoinPoint joinPoint) throws NoSuchMethodException {
         if(joinPoint.getSignature() instanceof MethodSignature signature){
             var targetMethod = getTargetMethod(joinPoint, signature);
@@ -37,7 +41,7 @@ public class ValidationAspect {
                 }
             }
             if(!violations.isEmpty()){
-                throw new RuntimeException(String.format(""));
+                throw new ValidatorException(String.format(ErrorCode.VALIDATION_DATA.getMessage(),violations));
             }
         }
 

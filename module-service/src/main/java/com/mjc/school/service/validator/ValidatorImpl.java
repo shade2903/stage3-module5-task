@@ -67,7 +67,7 @@ public class ValidatorImpl implements Validator {
                                     )
                             );
                         }
-                        validate(violations, value);
+                        validateObject(violations, value);
                     }
                 }catch (IllegalAccessException e){
                     e.printStackTrace();

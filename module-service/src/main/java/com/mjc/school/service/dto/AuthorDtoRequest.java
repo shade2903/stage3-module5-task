@@ -1,5 +1,9 @@
 package com.mjc.school.service.dto;
 
+import com.mjc.school.service.validator.constraint.Max;
+import com.mjc.school.service.validator.constraint.Min;
+import com.mjc.school.service.validator.constraint.NotNull;
+import com.mjc.school.service.validator.constraint.Size;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -7,7 +11,11 @@ import java.util.Objects;
 
 
 public class AuthorDtoRequest {
+    @Min(1)
+    @Max(Long.MAX_VALUE)
     private Long id;
+    @NotNull
+    @Size(min = 5, max = 15)
     private String name;
 
     public AuthorDtoRequest() {

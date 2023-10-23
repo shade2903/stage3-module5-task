@@ -11,6 +11,7 @@ import com.mjc.school.service.dto.CommentDtoResponse;
 import com.mjc.school.service.exception.ErrorCode;
 import com.mjc.school.service.exception.NotFoundException;
 import com.mjc.school.service.mapper.CommentMapper;
+import com.mjc.school.service.validator.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @ValidateParam
     @Transactional
-    public CommentDtoResponse create(CommentDtoRequest createRequest) {
+    public CommentDtoResponse create(@Valid CommentDtoRequest createRequest) {
         return commentMapper.commentToDtoResponse(
                 commentRepository.create(commentMapper.commentFromDtoRequest(createRequest)));
     }
@@ -57,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @ValidateParam
     @Transactional
-    public CommentDtoResponse update(CommentDtoRequest updateRequest) {
+    public CommentDtoResponse update(@Valid CommentDtoRequest updateRequest) {
         if(commentRepository.existById(updateRequest.getId())){
             CommentModel commentModel = commentRepository.update(commentMapper.commentFromDtoRequest(updateRequest));
             return commentMapper.commentToDtoResponse(commentModel);
