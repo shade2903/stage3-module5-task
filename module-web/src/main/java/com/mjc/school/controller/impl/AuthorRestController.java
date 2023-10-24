@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,11 +38,10 @@ public class AuthorRestController implements BaseController<AuthorDtoRequest, Au
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public List<AuthorDtoResponse> readAll(@RequestParam(defaultValue = "1", required = false) int page,
-                                           @RequestParam(defaultValue = "10", required = false) int size,
-                                           @RequestParam(name = "sort_by", defaultValue = "id::asc", required = false) String sortBy) {
-        return authorService.readAll(page, size, sortBy);
+    public ResponseEntity<List<AuthorDtoResponse>> readAll(@RequestParam(defaultValue = "1", required = false) int page,
+                                                          @RequestParam(defaultValue = "10", required = false) int size,
+                                                          @RequestParam(name = "sort_by", defaultValue = "id::asc", required = false) String sortBy) {
+        return new ResponseEntity<>(authorService.readAll(page, size, sortBy),HttpStatus.OK);
     }
 
     @Override
@@ -55,8 +55,8 @@ public class AuthorRestController implements BaseController<AuthorDtoRequest, Au
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     @ResponseStatus(HttpStatus.OK)
-    public AuthorDtoResponse readById(@PathVariable Long id) {
-        return authorService.readById(id);
+    public ResponseEntity<AuthorDtoResponse> readById(@PathVariable Long id) {
+        return new ResponseEntity<>(authorService.readById(id),HttpStatus.OK);
     }
 
     @Override
@@ -70,9 +70,8 @@ public class AuthorRestController implements BaseController<AuthorDtoRequest, Au
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.CREATED)
-    public AuthorDtoResponse create(@RequestBody AuthorDtoRequest createRequest) {
-        return authorService.create(createRequest);
+    public ResponseEntity<AuthorDtoResponse> create(@RequestBody AuthorDtoRequest createRequest) {
+        return new ResponseEntity<>(authorService.create(createRequest), HttpStatus.CREATED);
     }
 
     @Override
@@ -86,9 +85,8 @@ public class AuthorRestController implements BaseController<AuthorDtoRequest, Au
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public AuthorDtoResponse patch(@PathVariable Long id, @RequestBody AuthorDtoRequest updateRequest) {
-        return authorService.update(updateRequest);
+    public ResponseEntity<AuthorDtoResponse> patch(@PathVariable Long id, @RequestBody AuthorDtoRequest updateRequest) {
+        return new ResponseEntity<>(authorService.update(updateRequest), HttpStatus.OK);
     }
 
     @Override
@@ -102,9 +100,8 @@ public class AuthorRestController implements BaseController<AuthorDtoRequest, Au
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public AuthorDtoResponse update(@PathVariable Long id, @RequestBody AuthorDtoRequest updateRequest) {
-        return authorService.update(updateRequest);
+    public ResponseEntity<AuthorDtoResponse> update(@PathVariable Long id, @RequestBody AuthorDtoRequest updateRequest) {
+        return new ResponseEntity<>(authorService.update(updateRequest),HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,11 +35,10 @@ public class TagRestController implements BaseController<TagDtoRequest, TagDtoRe
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public List<TagDtoResponse> readAll(@RequestParam(defaultValue = "1", required = false) int page,
-                                        @RequestParam(defaultValue = "10", required = false) int size,
-                                        @RequestParam(name = "sort_by", defaultValue = "id::asc", required = false) String sortBy) {
-        return tagService.readAll(page, size, sortBy);
+    public ResponseEntity<List<TagDtoResponse>> readAll(@RequestParam(defaultValue = "1", required = false) int page,
+                                                       @RequestParam(defaultValue = "10", required = false) int size,
+                                                       @RequestParam(name = "sort_by", defaultValue = "id::asc", required = false) String sortBy) {
+        return new ResponseEntity<>(tagService.readAll(page, size, sortBy),HttpStatus.OK);
     }
 
     @Override
@@ -51,9 +51,8 @@ public class TagRestController implements BaseController<TagDtoRequest, TagDtoRe
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public TagDtoResponse readById(@PathVariable Long id) {
-        return tagService.readById(id);
+    public ResponseEntity<TagDtoResponse> readById(@PathVariable Long id) {
+        return new ResponseEntity<>(tagService.readById(id),HttpStatus.OK);
     }
 
     @Override
@@ -67,9 +66,8 @@ public class TagRestController implements BaseController<TagDtoRequest, TagDtoRe
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.CREATED)
-    public TagDtoResponse create(@RequestBody TagDtoRequest createRequest) {
-        return tagService.create(createRequest);
+    public ResponseEntity<TagDtoResponse> create(@RequestBody TagDtoRequest createRequest) {
+        return new ResponseEntity<>(tagService.create(createRequest),HttpStatus.CREATED);
     }
 
     @Override
@@ -83,9 +81,8 @@ public class TagRestController implements BaseController<TagDtoRequest, TagDtoRe
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public TagDtoResponse update(@PathVariable Long id, @RequestBody TagDtoRequest updateRequest) {
-        return tagService.update(updateRequest);
+    public ResponseEntity<TagDtoResponse> update(@PathVariable Long id, @RequestBody TagDtoRequest updateRequest) {
+        return new ResponseEntity<>(tagService.update(updateRequest),HttpStatus.OK);
     }
 
     @Override
@@ -99,9 +96,8 @@ public class TagRestController implements BaseController<TagDtoRequest, TagDtoRe
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public TagDtoResponse patch(@PathVariable Long id, @RequestBody TagDtoRequest updateRequest) {
-        return tagService.update(updateRequest);
+    public ResponseEntity<TagDtoResponse> patch(@PathVariable Long id, @RequestBody TagDtoRequest updateRequest) {
+        return new ResponseEntity<>(tagService.update(updateRequest),HttpStatus.OK);
     }
 
 

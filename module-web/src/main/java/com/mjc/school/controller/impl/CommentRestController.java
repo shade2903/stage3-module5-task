@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,10 +37,10 @@ public class CommentRestController implements BaseController<CommentDtoRequest, 
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    public List<CommentDtoResponse> readAll(@RequestParam(defaultValue = "1", required = false) int page,
-                                            @RequestParam(defaultValue = "10", required = false) int size,
-                                            @RequestParam(name = "sort_by", defaultValue = "id::asc", required = false) String sortBy) {
-        return commentService.readAll(page, size, sortBy);
+    public ResponseEntity<List<CommentDtoResponse>> readAll(@RequestParam(defaultValue = "1", required = false) int page,
+                                                           @RequestParam(defaultValue = "10", required = false) int size,
+                                                           @RequestParam(name = "sort_by", defaultValue = "id::asc", required = false) String sortBy) {
+        return new ResponseEntity<>(commentService.readAll(page, size, sortBy),HttpStatus.OK);
     }
 
     @Override
@@ -52,9 +53,8 @@ public class CommentRestController implements BaseController<CommentDtoRequest, 
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public CommentDtoResponse readById(@PathVariable Long id) {
-        return commentService.readById(id);
+    public ResponseEntity<CommentDtoResponse> readById(@PathVariable Long id) {
+        return new ResponseEntity<>(commentService.readById(id),HttpStatus.OK);
     }
 
     @Override
@@ -68,9 +68,8 @@ public class CommentRestController implements BaseController<CommentDtoRequest, 
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.CREATED)
-    public CommentDtoResponse create(@RequestBody CommentDtoRequest createRequest) {
-        return commentService.create(createRequest);
+    public ResponseEntity<CommentDtoResponse> create(@RequestBody CommentDtoRequest createRequest) {
+        return new ResponseEntity<>(commentService.create(createRequest), HttpStatus.CREATED);
     }
 
     @Override
@@ -84,9 +83,8 @@ public class CommentRestController implements BaseController<CommentDtoRequest, 
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public CommentDtoResponse update(@PathVariable Long id, @RequestBody CommentDtoRequest updateRequest) {
-        return commentService.update(updateRequest);
+    public ResponseEntity<CommentDtoResponse> update(@PathVariable Long id, @RequestBody CommentDtoRequest updateRequest) {
+        return new ResponseEntity<>(commentService.update(updateRequest),HttpStatus.OK);
     }
 
     @Override
@@ -101,8 +99,8 @@ public class CommentRestController implements BaseController<CommentDtoRequest, 
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     @ResponseStatus(HttpStatus.OK)
-    public CommentDtoResponse patch(@PathVariable Long id,@RequestBody CommentDtoRequest updateRequest) {
-        return commentService.update(updateRequest);
+    public ResponseEntity<CommentDtoResponse> patch(@PathVariable Long id,@RequestBody CommentDtoRequest updateRequest) {
+        return new ResponseEntity<>(commentService.update(updateRequest),HttpStatus.OK);
     }
 
     @Override

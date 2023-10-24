@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,11 +49,10 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public List<NewsDtoResponse> readAll(@RequestParam(defaultValue = "1", required = false) int page,
-                                         @RequestParam(defaultValue = "10", required = false) int size,
-                                         @RequestParam(name = "sort_by", defaultValue = "id::asc", required = false) String sortBy) {
-        return newsService.readAll(page, size, sortBy);
+    public ResponseEntity<List<NewsDtoResponse>> readAll(@RequestParam(defaultValue = "1", required = false) int page,
+                                                        @RequestParam(defaultValue = "10", required = false) int size,
+                                                        @RequestParam(name = "sort_by", defaultValue = "id::asc", required = false) String sortBy) {
+        return new ResponseEntity<>(newsService.readAll(page, size, sortBy),HttpStatus.OK);
     }
 
     @Override
@@ -65,9 +65,8 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public NewsDtoResponse readById(@PathVariable Long id) {
-        return newsService.readById(id);
+    public ResponseEntity<NewsDtoResponse>readById(@PathVariable Long id) {
+        return new ResponseEntity<>(newsService.readById(id),HttpStatus.OK);
     }
 
     @Override
@@ -81,9 +80,8 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.CREATED)
-    public NewsDtoResponse create(@RequestBody NewsDtoRequest createRequest) {
-        return newsService.create(createRequest);
+    public ResponseEntity<NewsDtoResponse> create(@RequestBody NewsDtoRequest createRequest) {
+        return new ResponseEntity<>(newsService.create(createRequest),HttpStatus.CREATED);
     }
 
     @Override
@@ -97,9 +95,8 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public NewsDtoResponse update(@PathVariable Long id,@RequestBody NewsDtoRequest updateRequest) {
-        return newsService.update(updateRequest);
+    public ResponseEntity<NewsDtoResponse> update(@PathVariable Long id,@RequestBody NewsDtoRequest updateRequest) {
+        return new ResponseEntity<>(newsService.update(updateRequest),HttpStatus.OK);
     }
 
     @Override
@@ -114,8 +111,8 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     @ResponseStatus(HttpStatus.OK)
-    public NewsDtoResponse patch(@PathVariable Long id, @RequestBody NewsDtoRequest updateRequest) {
-        return newsService.update(updateRequest);
+    public ResponseEntity<NewsDtoResponse> patch(@PathVariable Long id, @RequestBody NewsDtoRequest updateRequest) {
+        return new ResponseEntity<>(newsService.update(updateRequest),HttpStatus.OK);
     }
 
     @Override
@@ -143,13 +140,12 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public List<NewsDtoResponse> readBySearchParams(@RequestParam(value = "tag-id", required = false) List<Integer> tagIds,
+    public ResponseEntity<List<NewsDtoResponse>> readBySearchParams(@RequestParam(value = "tag-id", required = false) List<Integer> tagIds,
                                                     @RequestParam(value = "tag-names", required = false) List<String> tagNames,
                                                     @RequestParam(value = "author", required = false) String author,
                                                     @RequestParam(value = "title", required = false) String title,
                                                     @RequestParam(value = "content", required = false) String content) {
-        return newsService.readBySearchParams(new NewsQueryParams(tagNames,tagIds,author,title,content));
+        return new ResponseEntity<>(newsService.readBySearchParams(new NewsQueryParams(tagNames,tagIds,author,title,content)),HttpStatus.OK);
     }
 
 
@@ -162,9 +158,9 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public AuthorDtoResponse readAuthorByNewsId(@PathVariable Long newsId) {
-        return authorService.readByNewsId(newsId);
+
+    public ResponseEntity<AuthorDtoResponse> readAuthorByNewsId(@PathVariable Long newsId) {
+        return new ResponseEntity<>(authorService.readByNewsId(newsId),HttpStatus.OK);
     }
 
 
@@ -177,9 +173,8 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public List<TagDtoResponse> readTagsByNewsId(@PathVariable Long newsId) {
-        return tagService.readByNewsId(newsId);
+    public ResponseEntity<List<TagDtoResponse>> readTagsByNewsId(@PathVariable Long newsId) {
+        return new ResponseEntity<>(tagService.readByNewsId(newsId),HttpStatus.OK);
     }
 
     @GetMapping("/news/{newsId}/comments")
@@ -191,8 +186,8 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-    @ResponseStatus(HttpStatus.OK)
-    public List<CommentDtoResponse> readCommentsByNewsId(@PathVariable Long newsId) {
-        return commentService.readByNewsId(newsId);
+
+    public ResponseEntity<List<CommentDtoResponse>> readCommentsByNewsId(@PathVariable Long newsId) {
+        return new ResponseEntity<>(commentService.readByNewsId(newsId),HttpStatus.OK);
     }
 }
