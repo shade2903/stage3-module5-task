@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.toMap;
 
 
 @Component
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class ValidatorImpl implements Validator {
     private final Map< Class<? extends Annotation>, ConstraintChecker> checkersMap;
 

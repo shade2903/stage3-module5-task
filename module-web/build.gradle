@@ -1,8 +1,10 @@
 dependencies {
     implementation project(':module-service')
 
-    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
-    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
+    // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+//    // https://mvnrepository.com/artifact/io.swagger/swagger-annotations
+//    implementation 'io.swagger:swagger-annotations:1.6.11'
 
     // https://mvnrepository.com/artifact/io.rest-assured/rest-assured
     testImplementation 'io.rest-assured:rest-assured:4.5.1'
