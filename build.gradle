@@ -30,6 +30,7 @@ subprojects {
         implementation 'org.aspectj:aspectjweaver:1.9.19'
         // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
         implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+        implementation "org.springdoc:springdoc-openapi-ui:$springdocVersion"
 
         testImplementation "org.springframework.boot:spring-boot-starter-test:$springBootStarterTest"
         testImplementation "org.springframework:spring-test:$springVersion"
