@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @Mapper(componentModel = "spring",uses = {TagMapper.class,
-        AuthorMapper.class})
+        AuthorMapper.class, CommentMapper.class})
 public abstract class  NewsMapper {
  @Autowired
  protected AuthorRepository authorRepository;
@@ -33,5 +33,6 @@ public abstract class  NewsMapper {
 
     @Mapping(source = "author", target = "authorDto")
     @Mapping(source = "tags", target = "tagsDto")
+    @Mapping(source = "comments", target= "commentsDto")
     public abstract NewsDtoResponse newsToDtoResponse(NewsModel model);
 }

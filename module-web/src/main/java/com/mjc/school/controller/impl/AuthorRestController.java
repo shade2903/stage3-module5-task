@@ -9,11 +9,18 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Links;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "api/v1/authors",
@@ -41,7 +48,9 @@ public class AuthorRestController implements BaseController<AuthorDtoRequest, Au
     public ResponseEntity<List<AuthorDtoResponse>> readAll(@RequestParam(defaultValue = "1", required = false) int page,
                                                           @RequestParam(defaultValue = "10", required = false) int size,
                                                           @RequestParam(name = "sort_by", defaultValue = "id::asc", required = false) String sortBy) {
-        return new ResponseEntity<>(authorService.readAll(page, size, sortBy),HttpStatus.OK);
+        List<AuthorDtoResponse> authorDtoResponses = authorService.readAll(page,size,sortBy);
+        authorDtoResponses.stream().forEach(response -> response.add(getLinK(response)));
+        return new ResponseEntity<>(authorDtoResponses,HttpStatus.OK);
     }
 
     @Override
@@ -56,7 +65,8 @@ public class AuthorRestController implements BaseController<AuthorDtoRequest, Au
     })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<AuthorDtoResponse> readById(@PathVariable Long id) {
-        return new ResponseEntity<>(authorService.readById(id),HttpStatus.OK);
+        AuthorDtoResponse authorDtoResponse = authorService.readById(id);
+        return new ResponseEntity<>(authorDtoResponse.add(getLinK(authorDtoResponse)),HttpStatus.OK);
     }
 
     @Override
@@ -71,7 +81,8 @@ public class AuthorRestController implements BaseController<AuthorDtoRequest, Au
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     public ResponseEntity<AuthorDtoResponse> create(@RequestBody AuthorDtoRequest createRequest) {
-        return new ResponseEntity<>(authorService.create(createRequest), HttpStatus.CREATED);
+        AuthorDtoResponse authorDtoResponse = authorService.create(createRequest);
+        return new ResponseEntity<>(authorDtoResponse.add(getLinK(authorDtoResponse)), HttpStatus.CREATED);
     }
 
     @Override
@@ -86,7 +97,8 @@ public class AuthorRestController implements BaseController<AuthorDtoRequest, Au
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     public ResponseEntity<AuthorDtoResponse> patch(@PathVariable Long id, @RequestBody AuthorDtoRequest updateRequest) {
-        return new ResponseEntity<>(authorService.update(updateRequest), HttpStatus.OK);
+        AuthorDtoResponse authorDtoResponse = authorService.update(updateRequest);
+        return new ResponseEntity<>(authorDtoResponse.add(getLinK(authorDtoResponse)), HttpStatus.OK);
     }
 
     @Override
@@ -101,7 +113,8 @@ public class AuthorRestController implements BaseController<AuthorDtoRequest, Au
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     public ResponseEntity<AuthorDtoResponse> update(@PathVariable Long id, @RequestBody AuthorDtoRequest updateRequest) {
-        return new ResponseEntity<>(authorService.update(updateRequest),HttpStatus.OK);
+        AuthorDtoResponse authorDtoResponse = authorService.update(updateRequest);
+        return new ResponseEntity<>(authorDtoResponse.add(getLinK(authorDtoResponse)),HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -117,5 +130,10 @@ public class AuthorRestController implements BaseController<AuthorDtoRequest, Au
     @Override
     public void deleteById(@PathVariable Long id) {
         authorService.deleteById(id);
+    }
+
+    private Link getLinK(AuthorDtoResponse response){
+        return linkTo(AuthorRestController.class).slash(response.getId()).withSelfRel();
+
     }
 }

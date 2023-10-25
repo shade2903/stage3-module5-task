@@ -32,8 +32,8 @@ subprojects {
         // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
         implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
 
-//        implementation 'org.springframework.boot:spring-boot-starter-hateoas'
-//        implementation 'org.springframework.plugin:spring-plugin-core:3.0.0'
+        implementation 'org.springframework.boot:spring-boot-starter-hateoas:2.7.7'
+
 
 
         testImplementation "org.springframework.boot:spring-boot-starter-test:$springBootStarterTest"

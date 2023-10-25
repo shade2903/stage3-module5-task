@@ -1,8 +1,10 @@
 package com.mjc.school.controller;
 
+
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+
 
 public interface BaseController<T, R, K> {
 
@@ -16,4 +18,6 @@ public interface BaseController<T, R, K> {
     ResponseEntity<R> patch(K id, T updateRequest);
 
     void deleteById(K id);
+
+
 }

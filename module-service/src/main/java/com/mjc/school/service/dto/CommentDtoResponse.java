@@ -1,9 +1,11 @@
 package com.mjc.school.service.dto;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class CommentDtoResponse {
+public class CommentDtoResponse extends RepresentationModel<CommentDtoResponse> {
     private Long id;
     private String name;
 

@@ -16,15 +16,22 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping(value = "api/v1/news",
         produces = {"application/JSON", "application/XML"})
 @Api(value = "Operations for creating, updating, retrieving and deleting news in the application")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class NewsRestController implements BaseController<NewsDtoRequest, NewsDtoResponse, Long> {
     private final NewsService newsService;
     private final AuthorService authorService;
@@ -52,7 +59,14 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
     public ResponseEntity<List<NewsDtoResponse>> readAll(@RequestParam(defaultValue = "1", required = false) int page,
                                                         @RequestParam(defaultValue = "10", required = false) int size,
                                                         @RequestParam(name = "sort_by", defaultValue = "id::asc", required = false) String sortBy) {
-        return new ResponseEntity<>(newsService.readAll(page, size, sortBy),HttpStatus.OK);
+        List<NewsDtoResponse> newsDtoResponses = newsService.readAll(page,size,sortBy);
+        newsDtoResponses.stream().forEach(news-> news.add(getLink(news)));
+        newsDtoResponses.stream().map(news-> news.getTagsDto())
+                .forEach(tags-> tags.forEach(tag -> tag.add(getEntityLink(TagRestController.class,tag.getId()))));
+        newsDtoResponses.stream().map(news -> news.getCommentsDto())
+                .forEach(comments -> comments.forEach(comment -> comment.add(getEntityLink(CommentRestController.class,comment.getId()))));
+        newsDtoResponses.stream().map(news-> news.getAuthorDto()).forEach(author -> author.add(getEntityLink(AuthorRestController.class, author.getId())));
+        return new ResponseEntity<>(newsDtoResponses,HttpStatus.OK);
     }
 
     @Override
@@ -66,7 +80,9 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     public ResponseEntity<NewsDtoResponse>readById(@PathVariable Long id) {
-        return new ResponseEntity<>(newsService.readById(id),HttpStatus.OK);
+        NewsDtoResponse newsDtoResponse = newsService.readById(id);
+
+        return new ResponseEntity<>(newsDtoResponse.add(getLink(newsDtoResponse)),HttpStatus.OK);
     }
 
     @Override
@@ -81,7 +97,8 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     public ResponseEntity<NewsDtoResponse> create(@RequestBody NewsDtoRequest createRequest) {
-        return new ResponseEntity<>(newsService.create(createRequest),HttpStatus.CREATED);
+        NewsDtoResponse newsDtoResponse = newsService.create(createRequest);
+        return new ResponseEntity<>(newsDtoResponse.add(getLink(newsDtoResponse)),HttpStatus.CREATED);
     }
 
     @Override
@@ -96,7 +113,8 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     public ResponseEntity<NewsDtoResponse> update(@PathVariable Long id,@RequestBody NewsDtoRequest updateRequest) {
-        return new ResponseEntity<>(newsService.update(updateRequest),HttpStatus.OK);
+        NewsDtoResponse newsDtoResponse = newsService.update(updateRequest);
+        return new ResponseEntity<>(newsDtoResponse.add(getLink(newsDtoResponse)),HttpStatus.OK);
     }
 
     @Override
@@ -112,7 +130,8 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
     })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<NewsDtoResponse> patch(@PathVariable Long id, @RequestBody NewsDtoRequest updateRequest) {
-        return new ResponseEntity<>(newsService.update(updateRequest),HttpStatus.OK);
+        NewsDtoResponse newsDtoResponse = newsService.update(updateRequest);
+        return new ResponseEntity<>(newsDtoResponse.add(getLink(newsDtoResponse)),HttpStatus.OK);
     }
 
     @Override
@@ -145,11 +164,12 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
                                                     @RequestParam(value = "author", required = false) String author,
                                                     @RequestParam(value = "title", required = false) String title,
                                                     @RequestParam(value = "content", required = false) String content) {
+
         return new ResponseEntity<>(newsService.readBySearchParams(new NewsQueryParams(tagNames,tagIds,author,title,content)),HttpStatus.OK);
     }
 
 
-    @GetMapping("/news/{newsId}/author")
+    @GetMapping("/{newsId}/author")
     @ApiOperation(value = "Retrieve specific author with the supplied news id", response = AuthorDtoResponse.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved the author with the supplied news id"),
@@ -158,13 +178,13 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
-
     public ResponseEntity<AuthorDtoResponse> readAuthorByNewsId(@PathVariable Long newsId) {
-        return new ResponseEntity<>(authorService.readByNewsId(newsId),HttpStatus.OK);
+        AuthorDtoResponse authorDtoResponse = authorService.readByNewsId(newsId);
+        return new ResponseEntity<>(authorDtoResponse.add(getEntityLink(NewsRestController.class,newsId)),HttpStatus.OK);
     }
 
 
-    @GetMapping("/news/{newsId}/tags")
+    @GetMapping("/{newsId}/tags")
     @ApiOperation(value = "Retrieve specific all tags with the supplied news id", response = List.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved the tags with the supplied news id"),
@@ -177,7 +197,7 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
         return new ResponseEntity<>(tagService.readByNewsId(newsId),HttpStatus.OK);
     }
 
-    @GetMapping("/news/{newsId}/comments")
+    @GetMapping("/{newsId}/comments")
     @ApiOperation(value = "Retrieve specific all comments with the supplied news id", response = List.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved the comments with the supplied news id"),
@@ -189,5 +209,14 @@ public class NewsRestController implements BaseController<NewsDtoRequest, NewsDt
 
     public ResponseEntity<List<CommentDtoResponse>> readCommentsByNewsId(@PathVariable Long newsId) {
         return new ResponseEntity<>(commentService.readByNewsId(newsId),HttpStatus.OK);
+    }
+
+    private Link getLink(NewsDtoResponse response){
+        return linkTo(NewsRestController.class).slash(response.getId()).withSelfRel();
+    }
+
+
+    private Link getEntityLink(Class<? extends BaseController> controller, Long id){
+        return linkTo(methodOn(controller).readById(id)).withSelfRel();
     }
 }

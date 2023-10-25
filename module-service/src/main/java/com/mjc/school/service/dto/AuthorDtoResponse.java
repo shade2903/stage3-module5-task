@@ -1,5 +1,6 @@
 package com.mjc.school.service.dto;
 
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -7,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 
-public class AuthorDtoResponse {
+public class AuthorDtoResponse extends RepresentationModel<AuthorDtoResponse> {
     private Long id;
     private String name;
 

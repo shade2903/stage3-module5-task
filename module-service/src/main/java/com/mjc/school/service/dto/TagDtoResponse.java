@@ -1,11 +1,12 @@
 package com.mjc.school.service.dto;
 
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
 
-public class TagDtoResponse {
+public class TagDtoResponse extends RepresentationModel<TagDtoResponse> {
     private Long id;
     private String name;
 

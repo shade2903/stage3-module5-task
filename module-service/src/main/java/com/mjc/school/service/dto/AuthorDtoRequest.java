@@ -11,11 +11,9 @@ import java.util.Objects;
 
 
 public class AuthorDtoRequest {
-    @Min(1)
-    @Max(Long.MAX_VALUE)
+
     private Long id;
-    @NotNull
-    @Size(min = 5, max = 15)
+
     private String name;
 
     public AuthorDtoRequest() {
