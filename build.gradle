@@ -22,6 +22,8 @@ subprojects {
         implementation "org.springframework:spring-context:$springVersion"
         implementation "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
         implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+        // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
+        implementation "org.springframework.boot:spring-boot-starter-validation:$springBootVersion"
 
         // https://mvnrepository.com/artifact/org.postgresql/postgresql
         implementation "org.postgresql:postgresql:$postgresqlVersion"
@@ -36,8 +38,10 @@ subprojects {
 
 
 
+
+
         testImplementation "org.springframework.boot:spring-boot-starter-test:$springBootStarterTest"
-        testImplementation "org.springframework:spring-test:$springVersion"
+
         testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiterVersion"
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
         testImplementation "com.tngtech.archunit:archunit-junit5:$archUnitVersion"
