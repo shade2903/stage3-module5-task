@@ -9,11 +9,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 @RestController
 @RequestMapping(value = "api/v1/tags",
         produces = {"application/JSON", "application/XML"})
@@ -37,8 +41,11 @@ public class TagRestController implements BaseController<TagDtoRequest, TagDtoRe
     })
     public ResponseEntity<List<TagDtoResponse>> readAll(@RequestParam(defaultValue = "1", required = false) int page,
                                                        @RequestParam(defaultValue = "10", required = false) int size,
-                                                       @RequestParam(name = "sort_by", defaultValue = "id::asc", required = false) String sortBy) {
-        return new ResponseEntity<>(tagService.readAll(page, size, sortBy),HttpStatus.OK);
+                                                       @RequestParam(name = "sort_by", defaultValue = "id::asc",
+                                                               required = false) String sortBy) {
+        List<TagDtoResponse> tagDtoResponses = tagService.readAll(page, size, sortBy);
+        tagDtoResponses.stream().forEach(tags-> tags.add(getLinK(tags)));
+        return new ResponseEntity<>(tagDtoResponses,HttpStatus.OK);
     }
 
     @Override
@@ -52,7 +59,8 @@ public class TagRestController implements BaseController<TagDtoRequest, TagDtoRe
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     public ResponseEntity<TagDtoResponse> readById(@PathVariable Long id) {
-        return new ResponseEntity<>(tagService.readById(id),HttpStatus.OK);
+        TagDtoResponse tagDtoResponse = tagService.readById(id);
+        return new ResponseEntity<>(tagDtoResponse.add(getLinK(tagDtoResponse)),HttpStatus.OK);
     }
 
     @Override
@@ -67,7 +75,8 @@ public class TagRestController implements BaseController<TagDtoRequest, TagDtoRe
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     public ResponseEntity<TagDtoResponse> create(@RequestBody TagDtoRequest createRequest) {
-        return new ResponseEntity<>(tagService.create(createRequest),HttpStatus.CREATED);
+        TagDtoResponse tagDtoResponse = tagService.create(createRequest);
+        return new ResponseEntity<>(tagDtoResponse.add(getLinK(tagDtoResponse)),HttpStatus.CREATED);
     }
 
     @Override
@@ -82,7 +91,8 @@ public class TagRestController implements BaseController<TagDtoRequest, TagDtoRe
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     public ResponseEntity<TagDtoResponse> update(@PathVariable Long id, @RequestBody TagDtoRequest updateRequest) {
-        return new ResponseEntity<>(tagService.update(updateRequest),HttpStatus.OK);
+        TagDtoResponse tagDtoResponse = tagService.update(updateRequest);
+        return new ResponseEntity<>(tagDtoResponse.add(getLinK(tagDtoResponse)),HttpStatus.OK);
     }
 
     @Override
@@ -97,7 +107,8 @@ public class TagRestController implements BaseController<TagDtoRequest, TagDtoRe
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     public ResponseEntity<TagDtoResponse> patch(@PathVariable Long id, @RequestBody TagDtoRequest updateRequest) {
-        return new ResponseEntity<>(tagService.update(updateRequest),HttpStatus.OK);
+        TagDtoResponse tagDtoResponse = tagService.update(updateRequest);
+        return new ResponseEntity<>(tagDtoResponse.add(getLinK(tagDtoResponse)),HttpStatus.OK);
     }
 
 
@@ -105,7 +116,7 @@ public class TagRestController implements BaseController<TagDtoRequest, TagDtoRe
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Deletes specific tag with the supplied id")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully deletes the specific tag"),
+            @ApiResponse(code = 204, message = "Successfully deletes the specific tag"),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
@@ -116,5 +127,8 @@ public class TagRestController implements BaseController<TagDtoRequest, TagDtoRe
         tagService.deleteById(id);
     }
 
+    private Link getLinK(TagDtoResponse response){
+        return linkTo(TagRestController.class).slash(response.getId()).withSelfRel();
+    }
 
 }
